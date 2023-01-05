@@ -1,4 +1,4 @@
--- Analyize starting grid position to final position differential over the all races for each driver. A 'tenacity' metric explored to be over a few differes axes in Tableau.
+-- Analyize starting grid position to final position differential over the all races for each driver. A 'tenacity' metric to be explored over a few differes axes in Tableau.
 
 -- Finding the data.
 
