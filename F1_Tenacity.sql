@@ -1,6 +1,8 @@
 -- Analyize starting grid position to final position differential over the all races for each driver. A 'tenacity' metric to be explored over a few differes axes in Tableau.
+-- SQL Server queries are for the F1 dataset on Kaggle. https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020
 
--- Finding the data.
+
+-- Joining the relevant tables.
 
 SELECT
 F1..results$.driverId, F1..results$.grid, F1..results$.position, F1..drivers$.forename, F1..drivers$.surname, F1..results$.grid-F1..results$.position as grid_improvment
