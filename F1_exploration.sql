@@ -5,7 +5,12 @@
 -- Joining the relevant tables.
 
 SELECT
-	F1..results$.driverId, F1..results$.grid, F1..results$.position, F1..drivers$.forename, F1..drivers$.surname, F1..results$.grid-F1..results$.position as grid_improvment
+	F1..results$.driverId,
+    F1..results$.grid,
+    F1..results$.position,
+    F1..drivers$.forename,
+    F1..drivers$.surname,
+    F1..results$.grid-F1..results$.position as grid_improvment
 FROM
 	F1..results$
 INNER JOIN 
@@ -17,7 +22,13 @@ ORDER BY
 -- Aggregate the data. I am not certain if the aggregate function MAX is is the correct way to return the driver's names in this table, but it works.
 
 SELECT
-	F1..results$.driverId, ROUND(AVG(F1..results$.grid),2) AS grid_position, ROUND(AVG(F1..results$.position),2) AS Finish, ROUND(AVG(F1..results$.grid-F1..results$.position),2)AS grid_improvement, COUNT(F1..results$.raceId) as Total_Races, MAX(F1..drivers$.forename), MAX(F1..drivers$.surname)
+	F1..results$.driverId,
+    ROUND(AVG(F1..results$.grid),2) AS grid_position,
+    ROUND(AVG(F1..results$.position),2) AS Finish,
+    ROUND(AVG(F1..results$.grid-F1..results$.position),2)AS grid_improvement,
+    COUNT(F1..results$.raceId) as Total_Races,
+    MAX(F1..drivers$.forename),
+    MAX(F1..drivers$.surname)
 FROM 
 	F1..results$
 INNER JOIN
@@ -31,7 +42,13 @@ ORDER BY
 --Limit the list to only the top 100 drivers in terms of races completed
 
 SELECT TOP 100
-	F1..results$.driverId, ROUND(AVG(F1..results$.grid),2) AS grid_position, ROUND(AVG(F1..results$.position),2) AS Finish, ROUND(AVG(F1..results$.grid-F1..results$.position),2)AS grid_improvement, COUNT(F1..results$.raceId) as Total_Races, MAX(F1..drivers$.forename), MAX(F1..drivers$.surname)
+	F1..results$.driverId,
+    ROUND(AVG(F1..results$.grid),2) AS grid_position,
+    ROUND(AVG(F1..results$.position),2) AS Finish,
+    ROUND(AVG(F1..results$.grid-F1..results$.position),2)AS grid_improvement,
+    COUNT(F1..results$.raceId) as Total_Races,
+    MAX(F1..drivers$.forename),
+    MAX(F1..drivers$.surname)
 FROM 
 	F1..results$
 INNER JOIN
@@ -120,9 +137,10 @@ GROUP BY
 ORDER BY 
 	COUNT(F1..results$.raceId) DESC
 
---I want to visualize the metric over the history of F1 with lines for every driver using a per season average. So this query has different groupings and a few more columns for Tableau.
---Perhaps an area graph of various nation's contribution to overall differential will reveal interesting patterns. Also to look into trends in the motorsport as whole, over time. Leave all drivers in
---and leave the filtering out to Tableau.
+--I want to visualize the metric over the history of F1 with lines for every driver using a per season average. So this query has different groupings and a few more
+--columns for Tableau.
+--Perhaps an area graph of various nation's contribution to overall differential will reveal interesting patterns. Also to look into trends in the motorsport as 
+--whole, over time. Leave all drivers in and leave the filtering to Tableau.
 --Will be exported as seasons.xls
 
 SELECT
@@ -152,7 +170,8 @@ GROUP BY
 ORDER BY 
 	races$.year
 
---Aside from finding interesting data stories about some strange seasons and some interesting drivers, this is mostly, in the end, a complicated way of looking at the history of DNFs, DSQs, and DNSs in F1.
+--Aside from finding interesting data stories about some strange seasons and some interesting drivers, this is mostly, in the end, a complicated way of
+--looking at the history of DNFs, DSQs, and DNSs in F1.
 --There is certainly a way to normalize the defferential to eliminate or reduce the effect of nulls, so, let's do that.
 
 --First a query of DNFs over time. These resuslts still eliminate drivers that did not start the race.
@@ -176,7 +195,8 @@ GROUP BY
 ORDER BY 
 	races$.year
 
--- Now we will normalize. First we have to figure out what the max for each field is, which is different for each race. Then incorporate thiese new numbers into the orignial query.
+-- Now we will normalize. First we have to figure out what the max for each field is, which is different for each race. Then incorporate thiese new numbers
+--into the orignial query.
 
 WITH normalized_results AS (
     SELECT 
@@ -248,8 +268,10 @@ ORDER BY
     races$.year
 
 	
---I wrote a query to find the MIN and MAX Normalized Differential from each race, and used that for a season min average and max average for another graph. This just produced noise, what I want is average deviation from 0. Min_max is all chaos, crashes, and epic charges.
---The math is simple since I am only looking for deviation from 0. I simply need to make the negative numbers positive with the ABS function and make an average for each race, then for each season. This will give me a per season metric that I hope will be illuminating.
+--I wrote a query to find the MIN and MAX Normalized Differential from each race, and used that for a season min average and max average for another graph.
+--This just produced noise, what I want is average deviation from 0. Min_max is all chaos, crashes, and epic charges.
+--The math is simple since I am only looking for deviation from 0. I simply need to make the negative numbers positive with the ABS function and make an
+--average for each race, then for each season. This will give me a per season metric that I hope will be illuminating.
 
 WITH normalized_results AS (
     SELECT 
@@ -374,10 +396,14 @@ ORDER BY
 	races$.[year]
 
 
---Exploring pit starts, which the data has as a F1..results$.grid entry of 0. Rather than just deleting a pit start I would like to have it be a last place + 1 start to better flesh out our data.
---There have been 1,609 individual pit starts and 393 races with pit starts in championship racing, it would be a fun later project to explore those more, lost of great stories in there.
---Actually, no. The data does not differentiate between a pit start and no start at all. Further digging into the data reveals only 37 races that have completed with a start in the pits. No doubt a few interesting stories,
---but this won't have a huge impact on the visualizations. It does however remain important to cull the pit starts since it is entered as position 0, which puts it above the top of the pole as far as our differantial math is considered.
+--Exploring pit starts, which the data has as a F1..results$.grid entry of 0. Rather than just deleting a pit start I would like to have it be a
+--last place + 1 start to better flesh out our data.
+--There have been 1,609 individual pit starts and 393 races with pit starts in championship racing, it would be a fun later project to explore
+--those more, lost of great stories in there.
+--Actually, no. The data does not differentiate between a pit start and no start at all. Further digging into the data reveals only 37 races that have
+--completed with a start in the pits. No doubt a few interesting stories,
+--but this won't have a huge impact on the visualizations. It does however remain important to cull the pit starts since it is entered as position 0,
+--which puts it above the top of the pole as far as our differantial math is considered.
 
 SELECT
 raceId, driverId, grid, position
