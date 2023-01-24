@@ -195,7 +195,7 @@ GROUP BY
 ORDER BY 
 	races$.year
 
--- Now we will normalize. First we have to figure out what the max for each field is, which is different for each race. Then incorporate thiese new numbers
+--Now we will normalize. First we have to figure out what the max for each field is, which is different for each race. Then incorporate thiese new numbers
 --into the orignial query.
 
 WITH normalized_results AS (
